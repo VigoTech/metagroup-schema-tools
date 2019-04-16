@@ -1,10 +1,14 @@
 const YoutubeVideos = require('./videos/youtube.js')
 const TeltekVideos = require('./videos/teltek.js')
-const colors = require('colors')
-
+const e = require('events')
+let eventEmitter
 
 const Videos = {
-  getGroupVideos(sources, limit, options) {
+  getEventsEmitter() {
+    eventEmitter = eventEmitter || new e.EventEmitter()
+    return eventEmitter
+  },
+  async getGroupVideos(sources, limit, options) {
     let videos = []
 
     sources = sources || [{
@@ -16,24 +20,30 @@ const Videos = {
       sources = [sources]
     }
 
-    sources.forEach(source => {
+    for(let sourceKey in sources) {
+      let source = sources[sourceKey]
       if (source.type !== null) {
-        videos = videos.concat(Videos.getVideosFromSource(source, limit, options))
+        videos = videos.concat(await Videos.getVideosFromSource(source, limit, options))
       }
-    })
+    }
+    return videos
 
   },
-  getVideosFromSource(source, limit, options) {
+  async getVideosFromSource(source, limit, options) {
     let videos = []
+    const eventEmitter = Videos.getEventsEmitter()
+    eventEmitter.emit('getVideosFromSourceInit', source, options)
 
     switch (source.type) {
       case 'youtube':
-        videos = YoutubeVideos.getChannelVideos(source, limit, options)
+        videos = await YoutubeVideos.getChannelVideos(source, limit, options)
         break;
       case 'teltek':
-        videos = TeltekVideos.getVideos(source, limit, options);
+        videos = await TeltekVideos.getVideos(source, limit, options);
         break;
     }
+
+    eventEmitter.emit('getVideosFromSourceCompleted', videos, options)
 
     return videos
   }

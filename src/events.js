@@ -1,8 +1,14 @@
 const EventsJson = require('./events/json.js')
 const EventsMeetup = require('./events/meetup.js')
 const EventsEventbrite = require('./events/eventbrite.js')
+const e = require('events')
+let eventEmitter
 
 const Events  = {
+  getEventsEmitter() {
+    eventEmitter = eventEmitter || new e.EventEmitter()
+    return eventEmitter
+  },
   getGroupNextEvents(sources, options) {
     sources = sources || [{
       type: null
@@ -24,6 +30,8 @@ const Events  = {
   },
   getNextFromSource(source, options) {
     let nextEvents = []
+    const eventEmitter = Events.getEventsEmitter()
+    eventEmitter.emit('getNextFromSourceInit', source, options)
 
     switch (source.type) {
       case 'meetup':
@@ -36,6 +44,8 @@ const Events  = {
         nextEvents = EventsJson.getNext(source, options)
         break;
     }
+
+    eventEmitter.emit('getNextFromSourceCompleted', nextEvents, options)
 
     return nextEvents
   },
