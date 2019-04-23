@@ -1,6 +1,6 @@
 {
   "name": "metagroup-schema-tools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Metagroup (like vigotech.org) schema tools",
   "main": "src/index.js",
   "repository": "git@github.com:VigoTech/metagroup-schema-tools.git",
