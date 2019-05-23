@@ -7,14 +7,18 @@ module.exports = {
     let feed = await parser.parseURL(source.source);
 
     feed.items.forEach(item => {
-      results.push({
-        player: 'native', //'teltek',
-        id: item.link.match(/pumukit\/(.*)\/(.*)\.mp4/)[2],
-        src: item.link,
-        title: item.title,
-        pubDate: new Date(item.pubDate).getTime(),
-        thumbnail: item.itunes.image
-      })
+      try {
+        results.push({
+          player: 'native',
+          id: item.guid.match(/pumukit\/(.*)\/(.*)\.mp4/)[2],
+          src: item.link,
+          title: item.title,
+          pubDate: new Date(item.pubDate).getTime(),
+          thumbnail: item.itunes.image
+        })
+      } catch (e) {
+        console.log('Error getting Teltek videos')
+      }
     });
     return results
   }
