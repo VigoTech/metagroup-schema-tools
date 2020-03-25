@@ -65,13 +65,13 @@ const Events  = {
     let nextEvents = []
     sources.forEach(source => {
       if (source.type !== null) {
-        nextEvents = nextEvents.concat(Events.getPassFromSource(source, options))
+        nextEvents = nextEvents.concat(Events.getPrevFromSource(source, options))
       }
     })
 
     return Events.sortByDate(nextEvents)
   },
-  getPassFromSource (source, options) {
+  getPrevFromSource (source, options) {
     let nextEvents = []
     const eventEmitter = Events.getEventsEmitter()
     eventEmitter.emit('getPrevFromSourceInit', source, options)

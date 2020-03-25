@@ -91,6 +91,10 @@ Provee métodos para importar e normalizar os próximos das distintas fontes
   
   * `getNextFromSource(source, options)` obten os eventos dunha fonte
   
+  * `getGroupPrevEvents(sources, options)` obten todos os eventos (independentemente da fonte) pasados dun grupo, ordeados por data de más próximo a máis lonxano. 
+    
+  * `getPrevFromSource(source, options)` obten os eventos pasado dunha fonte
+  
   * `sortByDate(events)`
   
   En todos os casos _options_ é un obxecto no que se pasan elementos que poden precisar cada un dos importadores, por exemplo, o importador de *eventbrite* precisa o _eventbriteToken_ para poder funcionar.
