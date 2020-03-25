@@ -1,6 +1,6 @@
 {
   "name": "metagroup-schema-tools",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Metagroup (like vigotech.org) schema tools",
   "main": "src/index.js",
   "repository": "git@github.com:VigoTech/metagroup-schema-tools.git",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "googleapis": "^39.2.0",
+    "googleapis": "^48.0.0",
     "jsonschema": "^1.2.4",
     "moment": "^2.24.0",
     "rss-parser": "^3.7.0",
