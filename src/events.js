@@ -5,11 +5,11 @@ const e = require('events')
 let eventEmitter
 
 const Events  = {
-  getEventsEmitter() {
+  getEventsEmitter () {
     eventEmitter = eventEmitter || new e.EventEmitter()
     return eventEmitter
   },
-  getGroupNextEvents(sources, options) {
+  getGroupNextEvents (sources, options) {
     sources = sources || [{
       type: null
     }]
@@ -28,7 +28,7 @@ const Events  = {
 
     return Events.sortByDate(nextEvents)
   },
-  getNextFromSource(source, options) {
+  getNextFromSource (source, options) {
     let nextEvents = []
     const eventEmitter = Events.getEventsEmitter()
     eventEmitter.emit('getNextFromSourceInit', source, options)
@@ -49,9 +49,49 @@ const Events  = {
 
     return nextEvents
   },
-  sortByDate(events) {
+  sortByDate (events) {
     return events.sort((a, b) => (a.date > b.date) ? 1 : ((b.date > a.date) ? -1 : 0))
-  }
+  },
+  getGroupPrevEvents (sources, options) {
+    sources = sources || [{
+      type: null
+    }]
+
+    // Isn't array, convert it
+    if (sources.length === undefined) {
+      sources = [sources]
+    }
+
+    let nextEvents = []
+    sources.forEach(source => {
+      if (source.type !== null) {
+        nextEvents = nextEvents.concat(Events.getPrevFromSource(source, options))
+      }
+    })
+
+    return Events.sortByDate(nextEvents)
+  },
+  getPrevFromSource (source, options) {
+    let nextEvents = []
+    const eventEmitter = Events.getEventsEmitter()
+    eventEmitter.emit('getPrevFromSourceInit', source, options)
+
+    switch (source.type) {
+      case 'meetup':
+        nextEvents = EventsMeetup.getPrev(source, options)
+        break;
+      case 'eventbrite':
+        nextEvents = EventsEventbrite.getPrev(source, options)
+        break;
+      case 'json':
+        nextEvents = EventsJson.getPrev(source, options)
+        break;
+    }
+
+    eventEmitter.emit('getPrevFromSourceCompleted', nextEvents, options)
+
+    return nextEvents
+  },
 }
 
 module.exports = Events
