@@ -34,13 +34,17 @@ const Videos = {
     const eventEmitter = Videos.getEventsEmitter()
     eventEmitter.emit('getVideosFromSourceInit', source, options)
 
-    switch (source.type) {
-      case 'youtube':
-        videos = await YoutubeVideos.getChannelVideos(source, limit, options)
-        break;
-      case 'teltek':
-        videos = await TeltekVideos.getVideos(source, limit, options);
-        break;
+    try {
+      switch (source.type) {
+        case 'youtube':
+          videos = await YoutubeVideos.getChannelVideos(source, limit, options)
+          break;
+        case 'teltek':
+          videos = await TeltekVideos.getVideos(source, limit, options);
+          break;
+      }
+    } catch (e) {
+      console.error(source, e)
     }
 
     eventEmitter.emit('getVideosFromSourceCompleted', videos, options)
